@@ -2,6 +2,7 @@ import React from 'react';
 import {createSwitchNavigator, createAppContainer} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
+import NavigationService from './NavigationService';
 import HomeScreen from './screens/HomeScreen';
 import RecipeListScreen from './screens/RecipeListScreen';
 import RecipeScreen from './screens/RecipeScreen';
@@ -36,7 +37,11 @@ const AppContainer = createAppContainer(StartNavigator);
 const App: () => React$Node = () => {
   return (
     <>
-      <AppContainer />
+      <AppContainer
+        ref={navigatorRef => {
+          NavigationService.setTopLevelNavigator(navigatorRef);
+        }}
+      />
     </>
   );
 };

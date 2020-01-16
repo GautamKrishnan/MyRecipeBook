@@ -1,19 +1,68 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
-  StatusBar,
   TouchableOpacity,
   Image,
 } from 'react-native';
-
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import NavigationService from '../NavigationService';
+import {
+  Stitch,
+  AnonymousCredential,
+  RemoteMongoClient,
+} from 'mongodb-stitch-react-native-sdk';
 
 const RECIPE_ICON = require('../assets/recipe-book.png');
 const HomeScreen: () => React$Node = () => {
+  const [currentUserId, setCurrentUserId] = useState(undefined);
+
+  const authenticate = () => {
+    Stitch.initializeDefaultAppClient('myrecipebook-mobua').then(client => {
+      client.auth
+        .loginWithCredential(new AnonymousCredential())
+        .then(user => {
+          console.log(`Successfully logged in as user ${user.id}`);
+          setCurrentUserId(user.id);
+        })
+        .catch(err => {
+          console.log(`Failed to log in anonymously: ${err}`);
+        });
+    });
+  };
+
+  const fetchData = () => {
+    const stitchAppClient = Stitch.defaultAppClient;
+    const mongoClient = stitchAppClient.getServiceClient(
+      RemoteMongoClient.factory,
+      'mongodb-myrecipebook',
+    );
+    const db = mongoClient.db('testdb');
+    const myrecipes = db.collection('recipes');
+    myrecipes
+      .find({}, {})
+      .asArray()
+      .then(docs => {
+        console.log(docs);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    console.log(currentUserId);
+    if (currentUserId === undefined) {
+      authenticate();
+    }
+    // if (currentUserId) {
+    //   fetchData();
+    // }
+  });
+
   return (
     <>
       <SafeAreaView style={styles.homeScreen}>
@@ -30,6 +79,7 @@ const HomeScreen: () => React$Node = () => {
           style={styles.addRecipe}
           onPress={() => {
             console.log('Pressed');
+            NavigationService.navigate('Recipe');
           }}>
           <Image style={styles.recipeImage} source={RECIPE_ICON} />
         </TouchableOpacity>
