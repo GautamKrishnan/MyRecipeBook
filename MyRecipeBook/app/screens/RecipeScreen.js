@@ -5,23 +5,90 @@ import {
   ScrollView,
   View,
   Text,
-  StatusBar,
+  TextInput,
+  TouchableOpacity,
 } from 'react-native';
-
+import NavigationService from '../NavigationService';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {Add} from '../MongoDBHelper';
 
 const RecipeScreen: () => React$Node = () => {
+  const [recipeName, onChangeName] = React.useState('Name');
+  const [cuisine, onChangeCuisine] = React.useState('Cuisine');
+  const [duration, onChangeDuration] = React.useState('How much time');
+  const [serves, onChangeServes] = React.useState('How many will this serve');
+  const [ingredients, onChangeIngredients] = React.useState(
+    'Ingredients for this..',
+  );
+  const [instructions, onChangeInstructions] = React.useState(
+    'The steps to cook..',
+  );
+
+  const createRecipe = async () => {
+    const document = {
+      name: recipeName,
+      cuisine: cuisine,
+      duration: duration,
+      serves: serves,
+      ingredients: ingredients,
+      instructions: instructions,
+    };
+    const result = await Add('recipes', document);
+    if (result) {
+      NavigationService.back();
+    }
+  };
+
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
+      <SafeAreaView style={styles.recipeScreen}>
+        <ScrollView contentInsetAdjustmentBehavior="automatic">
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Recipe Screen</Text>
+              <Text style={styles.sectionTitle}>Add a new Recipe</Text>
+              <Text>Name:</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={text => onChangeName(text)}
+                value={recipeName}
+              />
+              <Text>Cuisine:</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={text => onChangeCuisine(text)}
+                value={cuisine}
+              />
+              <Text>Duration:</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={text => onChangeDuration(text)}
+                value={duration}
+              />
+              <Text>Serves:</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={text => onChangeServes(text)}
+                value={serves}
+              />
+              <Text>Ingredients:</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={text => onChangeIngredients(text)}
+                value={ingredients}
+              />
+              <Text>Instructions:</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={text => onChangeInstructions(text)}
+                value={instructions}
+                numberOfLines={0}
+              />
             </View>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={createRecipe}>
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -30,15 +97,9 @@ const RecipeScreen: () => React$Node = () => {
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
+  recipeScreen: {
     backgroundColor: Colors.white,
+    flex: 1,
   },
   sectionContainer: {
     marginTop: 32,
@@ -49,22 +110,22 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.black,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
   },
-  highlight: {
-    fontWeight: '700',
+  submitButton: {
+    marginTop: 20,
+    paddingTop: 5,
+    height: 30,
+    width: 60,
+    backgroundColor: '#3385EE',
+    alignSelf: 'center',
+    alignItems: 'center',
   },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+  submitButtonText: {
+    fontWeight: 'bold',
   },
 });
 

@@ -54,3 +54,22 @@ export async function DeleteDocument(collectionName, documentID) {
     })
     .catch(err => console.error(`Delete failed with error: ${err}`));
 }
+
+export async function Add(collectionName, document) {
+  const stitchAppClient = Stitch.defaultAppClient;
+  const mongoClient = stitchAppClient.getServiceClient(
+    RemoteMongoClient.factory,
+    'mongodb-myrecipebook',
+  );
+  const db = mongoClient.db('testdb');
+  const collection = db.collection(collectionName);
+  return collection
+    .insertOne(document)
+    .then(result => {
+      console.log('Wrote success');
+      return result;
+    })
+    .catch(err => {
+      console.warn(err);
+    });
+}
