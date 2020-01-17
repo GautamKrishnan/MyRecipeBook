@@ -12,7 +12,7 @@ import NavigationService from '../NavigationService';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Add} from '../MongoDBHelper';
 
-const RecipeScreen: () => React$Node = () => {
+const CreateRecipeScreen: () => React$Node = () => {
   const [recipeName, onChangeName] = React.useState('Name');
   const [cuisine, onChangeCuisine] = React.useState('Cuisine');
   const [duration, onChangeDuration] = React.useState('How much time');
@@ -129,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipeScreen;
+export default CreateRecipeScreen;

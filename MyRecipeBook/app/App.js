@@ -5,12 +5,12 @@ import {createStackNavigator} from 'react-navigation-stack';
 import NavigationService from './NavigationService';
 import HomeScreen from './screens/HomeScreen';
 import RecipeListScreen from './screens/RecipeListScreen';
-import RecipeScreen from './screens/RecipeScreen';
+import CreateRecipeScreen from './screens/CreateRecipeScreen';
 
 const DiscoverStack = createStackNavigator(
   {
     Home: HomeScreen,
-    Recipe: RecipeScreen,
+    Recipe: CreateRecipeScreen,
   },
   {headerMode: 'none'},
 );
@@ -18,7 +18,7 @@ const DiscoverStack = createStackNavigator(
 const MyRecipesStack = createStackNavigator(
   {
     RecipesList: RecipeListScreen,
-    Recipe: RecipeScreen,
+    Recipe: CreateRecipeScreen,
   },
   {headerMode: 'none'},
 );
