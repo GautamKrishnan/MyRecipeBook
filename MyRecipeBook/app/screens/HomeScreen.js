@@ -11,6 +11,7 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import NavigationService from '../NavigationService';
 import {InitializeMongoClient} from '../MongoDBHelper';
+import * as Constants from '../utils/Constants';
 
 const RECIPE_ICON = require('../assets/recipe-book.png');
 
@@ -41,7 +42,9 @@ const HomeScreen: () => React$Node = () => {
           style={styles.addRecipe}
           onPress={() => {
             console.log('Pressed');
-            NavigationService.navigate('Recipe');
+            NavigationService.navigate('Recipe', {
+              recipeDetails: Constants.DEFAULT_RECIPE,
+            });
           }}>
           <Image style={styles.recipeImage} source={RECIPE_ICON} />
         </TouchableOpacity>

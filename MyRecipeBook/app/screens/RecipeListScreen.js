@@ -9,13 +9,18 @@ import {
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {DeleteDocument, ReadCollection} from '../MongoDBHelper';
+import NavigationService from '../NavigationService';
+import * as Constants from '../utils/Constants';
 
 const RecipeListScreen: () => React$Node = () => {
   const [listViewData, setListViewData] = useState([]);
   const [deleteState, setDeleteState] = useState(true);
 
   const deleteRecipe = async objectID => {
-    const result = await DeleteDocument('recipes', objectID);
+    const result = await DeleteDocument(
+      Constants.COLLECTIONS_MYRECIPES,
+      objectID,
+    );
     if (result) {
       setDeleteState(!deleteState);
     }
@@ -23,7 +28,7 @@ const RecipeListScreen: () => React$Node = () => {
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      return await ReadCollection('recipes');
+      return await ReadCollection(Constants.COLLECTIONS_MYRECIPES);
     };
     fetchRecipe().then(r => setListViewData(r));
   }, [deleteState]);
@@ -35,9 +40,16 @@ const RecipeListScreen: () => React$Node = () => {
           <SwipeListView
             data={listViewData}
             renderItem={data => (
-              <View key={data.item._id} style={styles.rowFront}>
+              <TouchableOpacity
+                key={data.item._id}
+                style={styles.rowFront}
+                onPress={() => {
+                  NavigationService.navigate('ViewRecipe', {
+                    recipeDetails: data.item,
+                  });
+                }}>
                 <Text>{data.item.name}</Text>
-              </View>
+              </TouchableOpacity>
             )}
             renderHiddenItem={data => (
               <View style={styles.rowBack}>
@@ -49,7 +61,9 @@ const RecipeListScreen: () => React$Node = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    console.log('Edit');
+                    NavigationService.navigate('Recipe', {
+                      recipeDetails: data.item,
+                    });
                   }}>
                   <Text>Edit</Text>
                 </TouchableOpacity>
