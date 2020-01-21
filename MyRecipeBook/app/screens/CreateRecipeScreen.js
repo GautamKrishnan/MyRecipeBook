@@ -7,33 +7,57 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import NavigationService from '../NavigationService';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {Add} from '../MongoDBHelper';
+import {Add, Modify} from '../MongoDBHelper';
+import * as Constants from '../utils/Constants';
 
-const CreateRecipeScreen: () => React$Node = () => {
-  const [recipeName, onChangeName] = React.useState('Name');
-  const [cuisine, onChangeCuisine] = React.useState('Cuisine');
-  const [duration, onChangeDuration] = React.useState('How much time');
-  const [serves, onChangeServes] = React.useState('How many will this serve');
+const CreateRecipeScreen: () => React$Node = props => {
+  const {navigation} = props;
+  const recipeDetails = navigation.getParam('recipeDetails');
+  const [recipeName, onChangeName] = React.useState(recipeDetails.name);
+  const [cuisine, onChangeCuisine] = React.useState(recipeDetails.cuisine);
+  const [duration, onChangeDuration] = React.useState(recipeDetails.duration);
+  const [serves, onChangeServes] = React.useState(recipeDetails.serves);
   const [ingredients, onChangeIngredients] = React.useState(
-    'Ingredients for this..',
+    recipeDetails.ingredients,
   );
   const [instructions, onChangeInstructions] = React.useState(
-    'The steps to cook..',
+    recipeDetails.instructions,
   );
 
-  const createRecipe = async () => {
-    const document = {
-      name: recipeName,
-      cuisine: cuisine,
-      duration: duration,
-      serves: serves,
-      ingredients: ingredients,
-      instructions: instructions,
-    };
-    const result = await Add('recipes', document);
+  const pressSubmit = async () => {
+    let result;
+    if (recipeDetails._id) {
+      const updatedDocument = {
+        _id: recipeDetails._id,
+        name: recipeName,
+        cuisine: cuisine,
+        duration: duration,
+        serves: serves,
+        ingredients: ingredients,
+        instructions: instructions,
+      };
+      result = await Modify(
+        Constants.COLLECTIONS_MYRECIPES,
+        updatedDocument,
+        recipeDetails._id,
+      );
+      Alert.alert('Success', 'Modified Recipe Successfully', [{text: 'Ok'}]);
+    } else {
+      const document = {
+        name: recipeName,
+        cuisine: cuisine,
+        duration: duration,
+        serves: serves,
+        ingredients: ingredients,
+        instructions: instructions,
+      };
+      result = await Add(Constants.COLLECTIONS_MYRECIPES, document);
+      Alert.alert('Success', 'Created New Recipe Successfully', [{text: 'Ok'}]);
+    }
     if (result) {
       NavigationService.back();
     }
@@ -45,7 +69,9 @@ const CreateRecipeScreen: () => React$Node = () => {
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Add a new Recipe</Text>
+              <Text style={styles.sectionTitle}>
+                {recipeDetails._id ? 'Edit Your Recipe' : 'Create New Recipe'}
+              </Text>
               <Text>Name:</Text>
               <TextInput
                 style={styles.input}
@@ -84,9 +110,7 @@ const CreateRecipeScreen: () => React$Node = () => {
                 numberOfLines={0}
               />
             </View>
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={createRecipe}>
+            <TouchableOpacity style={styles.submitButton} onPress={pressSubmit}>
               <Text style={styles.submitButtonText}>Submit</Text>
             </TouchableOpacity>
           </View>

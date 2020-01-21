@@ -6,11 +6,13 @@ import NavigationService from './NavigationService';
 import HomeScreen from './screens/HomeScreen';
 import RecipeListScreen from './screens/RecipeListScreen';
 import CreateRecipeScreen from './screens/CreateRecipeScreen';
+import ViewRecipeScreen from './screens/ViewRecipeScreen';
 
 const DiscoverStack = createStackNavigator(
   {
     Home: HomeScreen,
     Recipe: CreateRecipeScreen,
+    ViewRecipe: ViewRecipeScreen,
   },
   {headerMode: 'none'},
 );
@@ -19,6 +21,7 @@ const MyRecipesStack = createStackNavigator(
   {
     RecipesList: RecipeListScreen,
     Recipe: CreateRecipeScreen,
+    ViewRecipe: ViewRecipeScreen,
   },
   {headerMode: 'none'},
 );
