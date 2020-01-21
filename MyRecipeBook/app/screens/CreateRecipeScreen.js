@@ -29,7 +29,7 @@ const CreateRecipeScreen: () => React$Node = props => {
   );
 
   const pressSubmit = async () => {
-    let result = null;
+    let result;
     if (recipeDetails._id) {
       const updatedDocument = {
         _id: recipeDetails._id,

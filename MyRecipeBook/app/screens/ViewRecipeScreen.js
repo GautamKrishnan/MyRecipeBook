@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableOpacity,
   Image,
   Dimensions,
   ScrollView,
@@ -22,11 +21,6 @@ const ViewRecipeScreen: () => React$Node = props => {
   const [recipe, setRecipe] = React.useState(
     navigation.getParam('recipeDetails'),
   );
-  //const {recipeProps} = props;
-
-  // React.useEffect(() => {
-  //   console.log(navigation.getParam('recipeDetails'));
-  // }, []);
 
   return (
     <>
@@ -51,13 +45,9 @@ const ViewRecipeScreen: () => React$Node = props => {
         </View>
         <ScrollView style={styles.scrollContainer}>
           <Text style={styles.ingredientsTitle}>Ingredients:</Text>
-          <Text style={styles.ingredientsText}>
-            {recipe.ingredients}
-          </Text>
+          <Text style={styles.ingredientsText}>{recipe.ingredients}</Text>
           <Text style={styles.instructionsTitle}>Instructions:</Text>
-          <Text style={styles.instructionsText}>
-              {recipe.instructions}
-          </Text>
+          <Text style={styles.instructionsText}>{recipe.instructions}</Text>
         </ScrollView>
       </View>
     </>
