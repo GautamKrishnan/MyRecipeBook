@@ -18,7 +18,7 @@ const RecipeListScreen: () => React$Node = () => {
 
   const deleteRecipe = async objectID => {
     const result = await DeleteDocument(
-      Constants.COLLECTIONS_MYRECIPES,
+      Constants.COLLECTIONS_RECIPES,
       objectID,
     );
     if (result) {
@@ -28,7 +28,7 @@ const RecipeListScreen: () => React$Node = () => {
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      return await ReadCollection(Constants.COLLECTIONS_MYRECIPES);
+      return await ReadCollection(Constants.COLLECTIONS_RECIPES);
     };
     fetchRecipe().then(r => setListViewData(r));
   }, [deleteState]);

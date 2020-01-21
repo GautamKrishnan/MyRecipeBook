@@ -41,7 +41,7 @@ const CreateRecipeScreen: () => React$Node = props => {
         instructions: instructions,
       };
       result = await Modify(
-        Constants.COLLECTIONS_MYRECIPES,
+        Constants.COLLECTIONS_RECIPES,
         updatedDocument,
         recipeDetails._id,
       );
@@ -55,7 +55,7 @@ const CreateRecipeScreen: () => React$Node = props => {
         ingredients: ingredients,
         instructions: instructions,
       };
-      result = await Add(Constants.COLLECTIONS_MYRECIPES, document);
+      result = await Add(Constants.COLLECTIONS_RECIPES, document);
       Alert.alert('Success', 'Created New Recipe Successfully', [{text: 'Ok'}]);
     }
     if (result) {
